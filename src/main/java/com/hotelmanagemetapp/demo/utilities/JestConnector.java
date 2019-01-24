@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class JestConnector {
 
 
-    @Value("{$elasticsearch.url}")
+    @Value("${elasticsearch.url}")
     private String jestUri;
 
     @Bean("jestConnection")
