@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @Configuration
 public class RedisConnector {
 
-    @Value("${spring.redis.url}")
+    @Value("${redis.url}")
     private String redisUrl;
 
     @Bean("redisConnection")

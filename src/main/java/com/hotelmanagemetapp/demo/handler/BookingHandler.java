@@ -188,7 +188,16 @@ public class BookingHandler {
 
         Bookingondate bookingondate = bookingondateService.getByDateAndHotelId( date , hotelId );
 
-        return bookingondate.getAvailableRooms();
+        if(bookingondate!=null)
+             return bookingondate.getAvailableRooms();
+        else{
+            Hotel hotel = hotelService.getHotelById(hotelId );
+            if(hotel!=null)
+                return hotel.getAvailableRooms();
+            else
+                return 0;
+
+        }
 
     }
 
