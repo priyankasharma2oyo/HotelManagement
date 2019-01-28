@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 @Service
@@ -23,8 +22,8 @@ public class Jobs {
 
         System.out.println("Redis Job started");
 
-        Map<Integer, ArrayList<Pair>> map = bookingService.getTrendingHotelsSetInMap();
-        redisService.hmset("trending",map);
+        Map<Integer, ArrayList<Pair>> map = bookingService.getAllTrendingHotelsSetInMap();
+        redisService.hmset("trending",map,120);
 
     }
 

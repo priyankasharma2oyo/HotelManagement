@@ -1,11 +1,19 @@
 package com.hotelmanagemetapp.demo.entities;
 
-public class Bookingondate {
+public class DateWiseRoomAvailability {
 
 
     Integer hotelId;
     String date;
-    Integer availableRooms;
+    Integer noOfAvailableRooms;
+
+    public Integer getNoOfAvailableRooms() {
+        return noOfAvailableRooms;
+    }
+
+    public void setNoOfAvailableRooms(Integer noOfAvailableRooms) {
+        this.noOfAvailableRooms = noOfAvailableRooms;
+    }
 
     public Integer getHotelId() {
         return hotelId;
@@ -23,22 +31,13 @@ public class Bookingondate {
         this.date = date;
     }
 
-    public Integer getAvailableRooms() {
-        return availableRooms;
-    }
-
-    public void setAvailableRooms(Integer availableRooms) {
-        this.availableRooms = availableRooms;
-    }
-
     @Override
     public String toString() {
-        return "Bookingondate{" +
+        return "DateWiseRoomAvailability{" +
                 "hotelId=" + hotelId +
                 ", date='" + date + '\'' +
-                ", availableRooms=" + availableRooms +
+                ", noOfAvailableRooms=" + noOfAvailableRooms +
                 '}';
     }
-
 
 }

@@ -3,9 +3,7 @@ package com.hotelmanagemetapp.demo.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hotelmanagemetapp.demo.utilities.Pair;
-import com.hotelmanagemetapp.demo.utilities.RedisConnector;
 import io.lettuce.core.KeyValue;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +17,12 @@ import java.util.stream.Collectors;
 
 public class RedisService {
 
-    @Autowired
-    BookingService bookingService;
-
-    @Autowired
-    RedisConnector redisConnector;
 
     @Qualifier("redisConnection")
     @Autowired
     StatefulRedisClusterConnection<String, String> redisConnection;
 
-    public void set(String key, Object object) {
+    public void set(String key, Object object, int ttlSeconds) {
 
         try{
 
@@ -40,6 +33,10 @@ public class RedisService {
 
             System.out.println("Redis set failed for key: " + key + ", exception: ");
 
+        }
+
+        if (ttlSeconds > 0) {
+            setKeyExpiry(key, ttlSeconds);
         }
 
     }
@@ -66,7 +63,11 @@ public class RedisService {
     }
 
 
-    public void hmset(String key, Map<Integer, ArrayList<Pair>> fieldMap) {
+    public void hmset(String key, Map<Integer, ArrayList<Pair>> fieldMap , int ttlSeconds ) {
+
+
+        if (CollectionUtils.isEmpty(fieldMap))
+            return;
 
         Gson gson = new Gson();
 
@@ -82,6 +83,9 @@ public class RedisService {
 
         }
 
+        if (ttlSeconds > 0) {
+            setKeyExpiry(key, ttlSeconds);
+        }
 
     }
 
@@ -151,6 +155,21 @@ public class RedisService {
         }
 
         return finalResponse;
+
+    }
+
+
+    private void setKeyExpiry(String key, int ttlSeconds) {
+
+        try {
+
+            if (ttlSeconds > 0) {
+                redisConnection.async().expire(key, ttlSeconds);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception in redis expiry command for key: " + key + " , exception: "+e);
+        }
 
     }
 

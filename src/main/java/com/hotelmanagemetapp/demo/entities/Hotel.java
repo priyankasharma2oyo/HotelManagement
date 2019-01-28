@@ -3,8 +3,6 @@ package com.hotelmanagemetapp.demo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.searchbox.annotations.JestId;
-import org.springframework.boot.actuate.trace.http.Include;
-import org.springframework.data.annotation.Id;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -17,9 +15,8 @@ public class Hotel {
     private String hotelName;
     private Integer cityId;
     private Integer stateId;
-    private String hotelType;
     private String address;
-    private Integer availableRooms;
+    private Integer noOfRooms;
     private Integer price;
 
 
@@ -56,13 +53,6 @@ public class Hotel {
         this.stateId = stateId;
     }
 
-    public String getHotelType() {
-        return hotelType;
-    }
-
-    public void setHotelType(String hotelType) {
-        this.hotelType = hotelType;
-    }
 
     public String getAddress() {
         return address;
@@ -72,13 +62,7 @@ public class Hotel {
         this.address = address;
     }
 
-    public Integer getAvailableRooms() {
-        return availableRooms;
-    }
 
-    public void setAvailableRooms(Integer availableRooms) {
-        this.availableRooms = availableRooms;
-    }
 
     public Integer getPrice() {
         return price;
@@ -88,6 +72,15 @@ public class Hotel {
         this.price = price;
     }
 
+
+    public Integer getNoOfRooms() {
+        return noOfRooms;
+    }
+
+    public void setNoOfRooms(Integer noOfRooms) {
+        this.noOfRooms = noOfRooms;
+    }
+
     @Override
     public String toString() {
         return "Hotel{" +
@@ -95,10 +88,10 @@ public class Hotel {
                 ", hotelName='" + hotelName + '\'' +
                 ", cityId=" + cityId +
                 ", stateId=" + stateId +
-                ", hotelType='" + hotelType + '\'' +
                 ", address='" + address + '\'' +
-                ", availableRooms=" + availableRooms +
+                ", noOfRooms=" + noOfRooms +
                 ", price=" + price +
                 '}';
     }
+
 }

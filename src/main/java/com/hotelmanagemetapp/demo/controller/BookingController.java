@@ -3,7 +3,6 @@ package com.hotelmanagemetapp.demo.controller;
 import com.hotelmanagemetapp.demo.utilities.Pair;
 import com.hotelmanagemetapp.demo.entities.Booking;
 import com.hotelmanagemetapp.demo.handler.BookingHandler;
-import io.lettuce.core.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,10 +29,10 @@ public class BookingController {
     }
 
     @PostMapping("/cancelBooking")
-    public void cancelBooking(@RequestParam("bookingId") String bookingName){
+    public String cancelBooking(@RequestParam("bookingId") String bookingName){
 
 
-        bookingHandler.cancelBooking(bookingName);
+        return bookingHandler.cancelBooking(bookingName);
 
     }
 
@@ -45,32 +44,37 @@ public class BookingController {
 
     }
 
-    @GetMapping("/getAllBookingsByHotelId")
-    public List<Booking> getAllBookingsByHotelId(@RequestParam("hotelId") Integer hotelId, @RequestParam("date") String date){
+    @GetMapping("/getBookingById")
+    public Booking getBookingById(@RequestParam("bookingId") String bookingId){
+        return bookingHandler.getBookingById(bookingId);
+    }
 
-        return bookingHandler.getAllBookingsByHotelId(hotelId,date);
+    @GetMapping("/getAllBookingsByHotelIdAndDate")
+    public List<Booking> getAllBookingsByHotelIdAndDate(@RequestParam("hotelId") Integer hotelId, @RequestParam("date") String date){
+
+        return bookingHandler.getAllBookingsByHotelIdAndDate(hotelId,date);
 
     }
 
 
-    @GetMapping("/getAllBookingsByUserId")
-    public List<Booking> getAllBookingsByUserId(@RequestParam("userId") String userId, @RequestParam("date") String date){
+    @GetMapping("/getAllBookingsByUserIdAndDate")
+    public List<Booking> getAllBookingsByUserIdAndDate(@RequestParam("userId") String userId, @RequestParam("date") String date){
 
-        return bookingHandler.getAllBookingsByUserId(userId,date);
-
-    }
-
-    @GetMapping("/getTrendingHotelsSetInMap")
-    public Map<Integer, ArrayList<Pair>> getTrendingHotelsSetInMap(){
-
-        return bookingHandler.getTrendingHotelsSetInMap();
+        return bookingHandler.getAllBookingsByUserIdAndDate(userId,date);
 
     }
 
-    @GetMapping("/getTrendingHotelsByCityId")
-    public Map<Integer, List<Pair > > getTrendingHotelsByCityId(@RequestParam("cityId") Integer cityId){
+    @GetMapping("/getAllTrendingHotelsSetInMap")
+    public Map<Integer, ArrayList<Pair>> getAllTrendingHotelsSetInMap(){
 
-        return bookingHandler.getTrendingHotelsByCityId(cityId);
+        return bookingHandler.getAllTrendingHotelsSetInMap();
+
+    }
+
+    @GetMapping("/getAllTrendingHotelsByCityId")
+    public Map<Integer, List<Pair > > getAllTrendingHotelsByCityId(@RequestParam("cityId") Integer cityId){
+
+        return bookingHandler.getAllTrendingHotelsByCityId(cityId);
 
     }
 
@@ -81,14 +85,23 @@ public class BookingController {
 
     }
 
+    @GetMapping("/getAllBookings")
+    public List<Booking> getAllBookings(){
 
-    //Booking On date
-    @GetMapping("/getAvailableRoomsByHotelId")
-    public Integer getAvailableRoomsByHotelId(@RequestParam("hotelId") Integer hotelId, @RequestParam("date") String date ){
-
-        return bookingHandler.getAvailableRoomsByHotelId( hotelId, date );
+        return bookingHandler.getAllBookings();
 
     }
+
+
+    //Date Wise Room Availability
+
+    @GetMapping("/getNoOfAvailableRoomsByHotelIdAndDate")
+    public Integer getNoOfAvailableRoomsByHotelIdAndDate(@RequestParam("hotelId") Integer hotelId, @RequestParam("date") String date ){
+
+        return bookingHandler.getNoOfAvailableRoomsByHotelIdAndDate( hotelId, date );
+
+    }
+
 
 
 

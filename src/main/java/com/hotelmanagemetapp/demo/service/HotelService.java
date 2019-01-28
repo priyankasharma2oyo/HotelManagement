@@ -1,13 +1,9 @@
 package com.hotelmanagemetapp.demo.service;
 
-
-import com.hotelmanagemetapp.demo.utilities.JestConnector;
 import com.hotelmanagemetapp.demo.entities.Hotel;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.*;
 import io.searchbox.indices.CreateIndex;
-
-
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
@@ -17,10 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 
@@ -33,11 +26,10 @@ public class HotelService {
 
     public void createIndex(String indexName){
 
-
-
         try {
 
             client.execute(new CreateIndex.Builder(indexName).build());
+
 
         }catch(IOException ex){
 
@@ -48,39 +40,40 @@ public class HotelService {
 
     }
 
-    public void addHotel(Hotel hotel){
+    public String addHotel(Hotel hotel){
 
-        Index index=new Index.Builder(hotel).index("hotel").type("doc").build();
+        if(hotel.getHotelId()!=null) {
 
+            Index index = new Index.Builder(hotel).index("hotel").type("doc").build();
 
+            try {
 
-        try {
+                client.execute(index);
 
-            client.execute(index);
+                return "Hotel created successfully";
 
-            System.out.println("Hotel created");
+            } catch (IOException ex) {
 
-        }catch(IOException ex){
+                return "Exception in creating hotel " + ex;
 
-            System.out.println("Exception in add hotel "+ex);
+            }
 
-        }
-
+        }else
+            return "hotel id not present";
 
     }
 
-    public List<Hotel> getHotelByIds(List<Integer>  hotelIds ) {
+    public List<Hotel> getHotelByIds(Set<Integer>  hotelIds ) {
 
 
+        List<Hotel> hotels = new ArrayList<Hotel>();
 
 
-        List<Hotel> hotels = new ArrayList<>();
-
-        for (int i = 0; i < hotelIds.size(); i++) {
+        for ( Integer hotelId: hotelIds) {
 
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
-            searchSourceBuilder.query(QueryBuilders.matchQuery("hotelId", hotelIds.get(i)));
+            searchSourceBuilder.query(QueryBuilders.matchQuery("hotelId", hotelId));
 
             Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex("hotel").addType("doc").build();
 
@@ -92,8 +85,10 @@ public class HotelService {
 
                 Hotel hotel = result.getSourceAsObject(Hotel.class, false);
 
-                if(hotel!=null)
-                     hotels.add(hotel);
+                if(hotel!=null) {
+                    hotels.add(hotel);
+
+                }
 
             } catch (IOException ex) {
 
@@ -105,12 +100,9 @@ public class HotelService {
 
         return hotels;
 
-
-
-
     }
 
-    public List<Hotel> getHotel( ) {
+    public List<Hotel> getAllHotels( ) {
 
 
 
@@ -119,7 +111,7 @@ public class HotelService {
 
         searchSourceBuilder.query(QueryBuilders.matchAllQuery());
 
-        Search search = new Search.Builder(searchSourceBuilder.size(100).toString()).addIndex("hotel").addType("doc").build();
+        Search search = new Search.Builder(searchSourceBuilder.size(1000).toString()).addIndex("hotel").addType("doc").build();
 
 
 
@@ -138,7 +130,6 @@ public class HotelService {
 
 
         return hotels;
-
 
     }
 
@@ -200,7 +191,7 @@ public class HotelService {
 
     }
 
-    public List<Hotel> getHotelByCityAndState( Integer cityId , Integer stateId ) {
+    public List<Hotel> getHotelByCityIdAndStateId( Integer cityId , Integer stateId ) {
 
 
 
@@ -228,9 +219,65 @@ public class HotelService {
 
     }
 
+    public List<Hotel> getHotelByCityId( Integer cityId ) {
 
-    public void deleteHotelById(Integer hotelId){
 
+
+        List<Hotel> hotels = new ArrayList<>();
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        QueryBuilder matchQuery=QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("cityId",cityId));
+        searchSourceBuilder.query(matchQuery);
+        Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex("hotel").addType("doc").build();
+
+        try {
+
+            SearchResult result = client.execute(search);
+
+            hotels = result.getSourceAsObjectList(Hotel.class, false);
+
+
+        } catch (IOException ex) {
+
+            System.out.println("Exception in retrieving hotel by city id "+ex);
+
+        }
+
+        return hotels;
+
+    }
+
+    public List<Hotel> getHotelByStateId( Integer stateId ) {
+
+
+
+        List<Hotel> hotels = new ArrayList<>();
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        QueryBuilder matchQuery=QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("stateId",stateId));
+        searchSourceBuilder.query(matchQuery);
+        Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex("hotel").addType("doc").build();
+
+        try {
+
+            SearchResult result = client.execute(search);
+
+            hotels = result.getSourceAsObjectList(Hotel.class, false);
+
+
+        } catch (IOException ex) {
+
+            System.out.println("Exception in retrieving hotel by state id "+ex);
+
+        }
+
+        return hotels;
+
+    }
+
+
+
+    public String deleteHotelById(Integer hotelId){
 
 
         Delete delete = new Delete.Builder(Integer.toString(hotelId)).index("hotel").type("doc").build();
@@ -239,12 +286,12 @@ public class HotelService {
 
             client.execute(delete);
 
-            System.out.println("Hotel deleted with id = "+hotelId);
+            return "Hotel deleted with id = "+hotelId;
 
 
         } catch (IOException ex) {
 
-            System.out.println("Exception in deleting hotel by id "+ex);
+            return "Exception in deleting hotel by id "+ex;
 
         }
 
@@ -274,7 +321,7 @@ public class HotelService {
 
     }
 
-    public void updateHotel(Hotel hotel){
+    public String updateHotel(Hotel hotel){
 
         Update updateAction = new Update.Builder(getUpdatePayload(hotel, false))
                 .index("hotel")
@@ -286,14 +333,17 @@ public class HotelService {
 
         try {
 
-            client.execute(updateAction);
+            DocumentResult res = client.execute(updateAction);
 
-            System.out.println("Hotel updated");
+            if(res.isSucceeded())
+                return "hotel updated successfully";
+            else
+                return "hotel not found";
 
 
         } catch (IOException ex) {
 
-            System.out.println("Exception in updating hotel "+ex);
+            return "Exception in updating hotel "+ex;
 
         }
 

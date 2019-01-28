@@ -1,7 +1,5 @@
 package com.hotelmanagemetapp.demo.service;
 
-import com.hotelmanagemetapp.demo.entities.Hotel;
-import com.hotelmanagemetapp.demo.utilities.JestConnector;
 import com.hotelmanagemetapp.demo.entities.City;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Index;
@@ -27,7 +25,7 @@ public class CityService {
     @Autowired
     JestClient client;
 
-    public void addCity(City city){
+    public String addCity(City city){
 
 
         Index index=new Index.Builder(city).index("city").type("doc").build();
@@ -37,11 +35,11 @@ public class CityService {
 
             client.execute(index);
 
-            System.out.println("City added");
+            return "City added";
 
         }catch(IOException ex){
 
-            System.out.println("Exception in adding city "+ex);
+            return "Exception in adding city "+ex;
 
         }
 
@@ -108,6 +106,38 @@ public class CityService {
         }
 
         return list;
+
+    }
+
+
+    public List<City> getAllCities( ) {
+
+
+
+        List<City> cities = new ArrayList<>();
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+
+        Search search = new Search.Builder(searchSourceBuilder.size(100).toString()).addIndex("city").addType("doc").build();
+
+
+
+        try {
+
+            SearchResult result = client.execute(search);
+
+            cities = result.getSourceAsObjectList(City.class, false);
+
+
+        } catch (IOException ex) {
+
+            System.out.println("Exception in retrieving all cities "+ex);
+
+        }
+
+
+        return cities;
 
     }
 

@@ -10,35 +10,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Pair {
 
 
-    public Integer a,b;
+    public Integer count,hotelId;
 
-
-
-   /* public Pair(Integer a,Integer b)
-    {
-        this.a = a;
-        this.b =b;
-    }*/
 
     @JsonCreator
-    public Pair( @JsonProperty("a") Integer a, @JsonProperty("b") Integer b) throws IllegalArgumentException {
+    public Pair( @JsonProperty("count") Integer count, @JsonProperty("hotelId") Integer hotelId) throws IllegalArgumentException {
 
-        if(a == null)
+        if(count == null)
             throw new IllegalArgumentException("Parameter first was not informed.");
 
-        this.a = a;
+        this.count = count;
 
-        this.b = b;
+        this.hotelId = hotelId;
 
     }
-
-
 
     @Override
     public String toString() {
         return "Pair{" +
-                "a=" + a +
-                ", b=" + b +
+                "count=" + count +
+                ", hotelId=" + hotelId +
                 '}';
     }
 

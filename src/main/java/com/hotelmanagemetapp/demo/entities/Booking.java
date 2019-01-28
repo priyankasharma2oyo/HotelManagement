@@ -13,38 +13,37 @@ public class Booking {
     private String bookingId;
     private Integer hotelId;
     private String userId;
-    private String checkIn;
-    private String checkOut;
-    private String date;
+    private String checkInDate;
+    private String checkOutDate;
+    private String dateOfBooking;
     private double amount;
     private Status status;
 
-    public String getDate() {
-        return date;
+
+
+    public String getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setCheckInDate(String checkInDate) {
+        this.checkInDate = checkInDate;
     }
 
-
-    public String getCheckIn() {
-        return checkIn;
+    public String getCheckOutDate() {
+        return checkOutDate;
     }
 
-    public void setCheckIn(String checkIn) {
-        this.checkIn = checkIn;
+    public void setCheckOutDate(String checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
 
-    public String getCheckOut() {
-        return checkOut;
+    public String getDateOfBooking() {
+        return dateOfBooking;
     }
 
-    public void setCheckOut(String checkOut) {
-        this.checkOut = checkOut;
+    public void setDateOfBooking(String dateOfBooking) {
+        this.dateOfBooking = dateOfBooking;
     }
-
-
 
 
     public String getUserId() {
@@ -54,8 +53,6 @@ public class Booking {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
-
 
 
 
@@ -99,8 +96,9 @@ public class Booking {
                 "bookingId='" + bookingId + '\'' +
                 ", hotelId=" + hotelId +
                 ", userId='" + userId + '\'' +
-                ", checkIn=" + checkIn +
-                ", checkOut=" + checkOut +
+                ", checkInDate='" + checkInDate + '\'' +
+                ", checkOutDate='" + checkOutDate + '\'' +
+                ", dateOfBooking='" + dateOfBooking + '\'' +
                 ", amount=" + amount +
                 ", status=" + status +
                 '}';
