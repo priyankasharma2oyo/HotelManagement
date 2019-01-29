@@ -13,6 +13,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -38,6 +39,9 @@ public class BookingService {
     @Qualifier("jestConnection")
     @Autowired
     JestClient client;
+
+    @Value("${trending_count}")
+    private Integer trending_count;
 
     public boolean addBooking(Booking booking) {
 
@@ -309,7 +313,7 @@ public class BookingService {
                             }
                         });
 
-                        if (set.size() > 5) {
+                        if (set.size() > trending_count) {
                             set.remove(set.size() - 1);
                         }
 
