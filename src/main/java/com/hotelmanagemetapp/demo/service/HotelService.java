@@ -284,10 +284,12 @@ public class HotelService {
 
         try {
 
-            client.execute(delete);
+            DocumentResult res= client.execute(delete);
 
-            return "Hotel deleted with id = "+hotelId;
-
+            if(res.isSucceeded())
+                return "Hotel deleted with id = "+hotelId;
+            else
+                return "hotel not found";
 
         } catch (IOException ex) {
 
