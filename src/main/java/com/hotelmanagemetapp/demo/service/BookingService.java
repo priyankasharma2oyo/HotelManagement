@@ -282,36 +282,40 @@ public class BookingService {
 
                     Integer count = getAllBookingsByHotelIdAndDateOfBooking(hotels.get(i).getHotelId(), localDate.toString());
 
-                    Pair p = new Pair(count, hotels.get(i).getHotelId());
+                    if(count!=0) {
 
-                    ArrayList<Pair> set;
+                        Pair p = new Pair(count, hotels.get(i).getHotelId());
 
-                    if (map.containsKey(hotels.get(i).getCityId())) {
+                        ArrayList<Pair> set;
 
-                        set = map.get(hotels.get(i).getCityId());
+                        if (map.containsKey(hotels.get(i).getCityId())) {
 
-                    } else {
+                            set = map.get(hotels.get(i).getCityId());
 
-                        set = new ArrayList<Pair>();
+                        } else {
 
-                    }
-
-                    set.add(p);
-
-                    Collections.sort(set, new Comparator<Pair>() {
-                        @Override
-                        public int compare(Pair o1, Pair o2) {
-
-                            return o2.count.compareTo(o1.count);
+                            set = new ArrayList<Pair>();
 
                         }
-                    });
 
-                    if (set.size() > 5) {
-                        set.remove(set.size() - 1);
+                        set.add(p);
+
+                        Collections.sort(set, new Comparator<Pair>() {
+                            @Override
+                            public int compare(Pair o1, Pair o2) {
+
+                                return o2.count.compareTo(o1.count);
+
+                            }
+                        });
+
+                        if (set.size() > 5) {
+                            set.remove(set.size() - 1);
+                        }
+
+                        map.put(hotels.get(i).getCityId(), set);
+
                     }
-
-                    map.put(hotels.get(i).getCityId(), set);
 
                 }
 
