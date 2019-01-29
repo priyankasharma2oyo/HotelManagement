@@ -17,13 +17,13 @@ public class Jobs {
     @Autowired
     RedisService redisService;
 
-    @Scheduled(cron = "0 */2 * ? * *")
+    @Scheduled(fixedRate = 5000)
     public void scheduleTaskUsingCronExpression() {
 
         System.out.println("Redis Job started");
 
         Map<Integer, ArrayList<Pair>> map = bookingService.getAllTrendingHotelsSetInMap();
-        redisService.hmset("trending",map,120);
+        redisService.hmset("trending",map,5);
 
     }
 
