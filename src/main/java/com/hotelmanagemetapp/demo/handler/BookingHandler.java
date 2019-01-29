@@ -239,4 +239,9 @@ public class BookingHandler {
 
     }
 
+    public List<DateWiseRoomAvailability> getDateWiseRoomAvailabilityByHotelId( Integer hotelId){
+        return dateWiseRoomAvailabilityService.getDateWiseRoomAvailabilityByHotelId( hotelId);
+    }
+
+
 }

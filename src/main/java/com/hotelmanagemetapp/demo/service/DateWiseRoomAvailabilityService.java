@@ -53,6 +53,34 @@ public class DateWiseRoomAvailabilityService {
 
     }
 
+    public List<DateWiseRoomAvailability> getDateWiseRoomAvailabilityByHotelId( Integer hotelId ){
+
+
+
+        List<DateWiseRoomAvailability> dateWiseRoomAvailability = new ArrayList<DateWiseRoomAvailability>();
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        QueryBuilder queryBuilder = QueryBuilders.matchQuery("hotelId", hotelId)  ;
+        QueryBuilder query = QueryBuilders.boolQuery().must(queryBuilder);
+        String searchString = searchSourceBuilder.query(query).toString();
+
+        Search search = new Search.Builder(searchString).addIndex("datewiseroomavailability").addType("doc").build();
+
+        try {
+
+            SearchResult result = client.execute(search);
+            dateWiseRoomAvailability = result.getSourceAsObjectList(DateWiseRoomAvailability.class, false);
+
+        } catch (IOException ex) {
+
+            System.out.println("Exception in retrieving dateWiseRoomAvailability "+ex);
+
+        }
+
+        return dateWiseRoomAvailability;
+
+    }
+
 
     public void addDateWiseRoomAvailability(DateWiseRoomAvailability dateWiseRoomAvailability){
 

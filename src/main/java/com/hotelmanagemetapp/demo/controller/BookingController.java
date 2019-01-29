@@ -1,5 +1,6 @@
 package com.hotelmanagemetapp.demo.controller;
 
+import com.hotelmanagemetapp.demo.entities.DateWiseRoomAvailability;
 import com.hotelmanagemetapp.demo.utilities.Pair;
 import com.hotelmanagemetapp.demo.entities.Booking;
 import com.hotelmanagemetapp.demo.handler.BookingHandler;
@@ -64,6 +65,13 @@ public class BookingController {
 
     }
 
+    @GetMapping("/getAllBookings")
+    public List<Booking> getAllBookings(){
+
+        return bookingHandler.getAllBookings();
+
+    }
+
     @GetMapping("/getAllTrendingHotelsSetInMap")
     public Map<Integer, ArrayList<Pair>> getAllTrendingHotelsSetInMap(){
 
@@ -85,12 +93,7 @@ public class BookingController {
 
     }
 
-    @GetMapping("/getAllBookings")
-    public List<Booking> getAllBookings(){
 
-        return bookingHandler.getAllBookings();
-
-    }
 
 
     //Date Wise Room Availability
@@ -100,6 +103,11 @@ public class BookingController {
 
         return bookingHandler.getNoOfAvailableRoomsByHotelIdAndDate( hotelId, date );
 
+    }
+
+    @GetMapping("/getDateWiseRoomAvailabilityByHotelId")
+    public List<DateWiseRoomAvailability> getDateWiseRoomAvailabilityByHotelId(@RequestParam("hotelId") Integer hotelId){
+        return bookingHandler.getDateWiseRoomAvailabilityByHotelId( hotelId);
     }
 
 
