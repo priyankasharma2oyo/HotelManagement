@@ -139,8 +139,8 @@ public class HotelController {
     }
 
 
-    @PostMapping("/updateHotel")
-    public String updateHotel(@RequestBody Hotel hotel, @RequestParam("hotelId") Integer hotelId){
+    @PostMapping("/updateHotel/{hotelId}")
+    public String updateHotel(@RequestBody Hotel hotel, @PathVariable("hotelId") Integer hotelId){
 
         hotel.setHotelId(hotelId);
 

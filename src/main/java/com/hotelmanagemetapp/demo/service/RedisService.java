@@ -22,7 +22,7 @@ public class RedisService {
     @Autowired
     StatefulRedisClusterConnection<String, String> redisConnection;
 
-    public void set(String key, Object object, int ttlSeconds) {
+    public void set(String key, Object object ) {
 
         try{
 
@@ -33,10 +33,6 @@ public class RedisService {
 
             System.out.println("Redis set failed for key: " + key + ", exception: ");
 
-        }
-
-        if (ttlSeconds > 0) {
-            setKeyExpiry(key, ttlSeconds);
         }
 
     }
@@ -63,7 +59,7 @@ public class RedisService {
     }
 
 
-    public void hmset(String key, Map<Integer, ArrayList<Pair>> fieldMap , int ttlSeconds ) {
+    public void hmset(String key, Map<Integer, ArrayList<Pair>> fieldMap ) {
 
 
         if (CollectionUtils.isEmpty(fieldMap))
@@ -83,10 +79,18 @@ public class RedisService {
 
         }
 
-        if (ttlSeconds > 0) {
-            setKeyExpiry(key, ttlSeconds);
-        }
+    }
 
+    public void del(String key){
+
+        try {
+
+            redisConnection.sync().del(key);
+        }catch(Exception e){
+
+            System.out.println("Redis del failed for key="+key+"  "+ e);
+
+        }
     }
 
 
@@ -159,19 +163,19 @@ public class RedisService {
     }
 
 
-    private void setKeyExpiry(String key, int ttlSeconds) {
-
-        try {
-
-            if (ttlSeconds > 0) {
-                redisConnection.async().expire(key, ttlSeconds);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Exception in redis expiry command for key: " + key + " , exception: "+e);
-        }
-
-    }
+//    private void setKeyExpiry(String key, int ttlSeconds) {
+//
+//        try {
+//
+//            if (ttlSeconds > 0) {
+//                redisConnection.async().expire(key, ttlSeconds);
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println("Exception in redis expiry command for key: " + key + " , exception: "+e);
+//        }
+//
+//    }
 
 
 

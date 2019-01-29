@@ -23,7 +23,8 @@ public class Jobs {
         System.out.println("Redis Job started");
 
         Map<Integer, ArrayList<Pair>> map = bookingService.getAllTrendingHotelsSetInMap();
-        redisService.hmset("trending",map,5);
+        redisService.del("trending");
+        redisService.hmset("trending",map );
 
     }
 
